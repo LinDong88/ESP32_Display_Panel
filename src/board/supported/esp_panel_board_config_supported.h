@@ -120,6 +120,9 @@
         + defined(BOARD_VIEWE_UEDX80480050E_WB_A_2) \
         + defined(BOARD_VIEWE_UEDX80480050E_AC_A) \
         + defined(BOARD_VIEWE_UEDX80480070E_WB_A) \
+        /* DFRobot */ \
+        + defined(BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_5) \
+        + defined(BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_8_8) \
         > 1
         #error "Multiple boards enabled! Please check file `esp_panel_board_supported_conf.h` and make sure only one board is enabled."
     #endif
@@ -225,6 +228,11 @@
         #include "viewe/BOARD_VIEWE_UEDX80480050E_AC_A.h"
     #elif defined(BOARD_VIEWE_UEDX80480070E_WB_A)
         #include "viewe/BOARD_VIEWE_UEDX80480070E_WB_A.h"
+    /* DFRobot */
+    #elif defined(BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_5)
+        #include "dfrobot/BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_5.h"
+    #elif defined(BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_8_8)
+        #include "dfrobot/BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_8_8.h"
     #else
         #error "Unknown board selected!"
     #endif

@@ -45,6 +45,7 @@
         #define ESP_PANEL_DRIVERS_LCD_USE_ST77903 (1)
         #define ESP_PANEL_DRIVERS_LCD_USE_ST77916 (1)
         #define ESP_PANEL_DRIVERS_LCD_USE_ST77922 (1)
+        #define ESP_PANEL_DRIVERS_LCD_USE_SIMPLE (1)
     #else
         #ifndef ESP_PANEL_DRIVERS_LCD_USE_AXS15231B
             #ifdef CONFIG_ESP_PANEL_DRIVERS_LCD_USE_AXS15231B
@@ -219,6 +220,14 @@
                 #define ESP_PANEL_DRIVERS_LCD_USE_ST77922 CONFIG_ESP_PANEL_DRIVERS_LCD_USE_ST77922
             #else
                 #define ESP_PANEL_DRIVERS_LCD_USE_ST77922 (0)
+            #endif
+        #endif
+
+        #ifndef ESP_PANEL_DRIVERS_LCD_USE_SIMPLE
+            #ifdef CONFIG_ESP_PANEL_DRIVERS_LCD_USE_SIMPLE
+                #define ESP_PANEL_DRIVERS_LCD_USE_SIMPLE CONFIG_ESP_PANEL_DRIVERS_LCD_USE_SIMPLE
+            #else
+                #define ESP_PANEL_DRIVERS_LCD_USE_SIMPLE (0)
             #endif
         #endif
     #endif // ESP_PANEL_DRIVERS_LCD_USE_ALL
@@ -408,6 +417,14 @@
         #define ESP_PANEL_DRIVERS_LCD_ENABLE_ST77922  (1)
     #else
         #define ESP_PANEL_DRIVERS_LCD_ENABLE_ST77922  (0)
+    #endif
+#endif
+
+#ifndef ESP_PANEL_DRIVERS_LCD_ENABLE_SIMPLE
+    #if ESP_PANEL_DRIVERS_LCD_COMPILE_UNUSED_DRIVERS || ESP_PANEL_DRIVERS_LCD_USE_SIMPLE
+        #define ESP_PANEL_DRIVERS_LCD_ENABLE_SIMPLE  (1)
+    #else
+        #define ESP_PANEL_DRIVERS_LCD_ENABLE_SIMPLE  (0)
     #endif
 #endif
 

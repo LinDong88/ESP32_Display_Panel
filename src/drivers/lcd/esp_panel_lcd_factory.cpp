@@ -90,6 +90,9 @@ const utils::unordered_map<utils::string, LCD_Factory::FunctionDeviceConstructor
 #if ESP_PANEL_DRIVERS_LCD_USE_ST77922
     MAP_ITEM(ST77922),
 #endif // CONFIG_ESP_PANEL_LCD_ST77922
+#if ESP_PANEL_DRIVERS_LCD_USE_SIMPLE
+    MAP_ITEM(SIMPLE),
+#endif // CONFIG_ESP_PANEL_LCD_SIMPLE
 };
 
 std::shared_ptr<LCD> LCD_Factory::create(

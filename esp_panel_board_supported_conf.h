@@ -18,7 +18,7 @@
  *
  * Set to `1` to enable supported board configuration, `0` to disable
  */
-#define ESP_PANEL_BOARD_DEFAULT_USE_SUPPORTED       (0)
+#define ESP_PANEL_BOARD_DEFAULT_USE_SUPPORTED       (1)
 
 #if ESP_PANEL_BOARD_DEFAULT_USE_SUPPORTED
 /**
@@ -113,6 +113,15 @@
 // #define BOARD_WAVESHARE_ESP32_S3_TOUCH_LCD_5_B
 // #define BOARD_WAVESHARE_ESP32_S3_TOUCH_LCD_7
 // #define BOARD_WAVESHARE_ESP32_P4_NANO
+
+/*
+ * DFRobot Supported Boards (https://www.dfrobot.com/):
+ *
+ *  -BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_5 (FIREBEETLE-ESP32-P4-LCD-5): https://www.dfrobot.com/
+ *  -BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_8_8 (8.8-inch Panel): https://www.dfrobot.com/
+ */
+#define BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_5
+// #define BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_8_8
 
 /*
  * VIEWE Supported Boards (https://viewedisplay.com/):
