@@ -167,7 +167,7 @@ static esp_err_t panel_simple_init(esp_lcd_panel_t *panel)
 {
     ESP_LOGI(TAG, "panel_simple_init");
     simple_panel_t *simple = (simple_panel_t *)panel->user_data;
-    esp_lcd_panel_io_handle_t io = simple->io;
+    //esp_lcd_panel_io_handle_t io = simple->io;
     const esp_panel_lcd_vendor_init_cmd_t *init_cmds = NULL;
     uint16_t init_cmds_size = 0;
     bool is_cmd_overwritten = false;
@@ -238,7 +238,7 @@ static esp_err_t panel_simple_reset(esp_lcd_panel_t *panel)
 
 static esp_err_t panel_simple_invert_color(esp_lcd_panel_t *panel, bool invert_color_data)
 {
-    simple_panel_t *simple = (simple_panel_t *)panel->user_data;
+    //simple_panel_t *simple = (simple_panel_t *)panel->user_data;
 
     // This driver does not support color inversion
     ESP_LOGI(TAG, "Color inversion called (invert=%d) - not supported, returning success", invert_color_data);
@@ -247,7 +247,7 @@ static esp_err_t panel_simple_invert_color(esp_lcd_panel_t *panel, bool invert_c
 
 static esp_err_t panel_simple_mirror(esp_lcd_panel_t *panel, bool mirror_x, bool mirror_y)
 {
-    simple_panel_t *simple = (simple_panel_t *)panel->user_data;
+    //simple_panel_t *simple = (simple_panel_t *)panel->user_data;
 
     // This driver does not support mirroring
     ESP_LOGI(TAG, "Mirror called (x=%d, y=%d) - not supported, returning success", mirror_x, mirror_y);
@@ -256,7 +256,7 @@ static esp_err_t panel_simple_mirror(esp_lcd_panel_t *panel, bool mirror_x, bool
 
 static esp_err_t panel_simple_disp_on_off(esp_lcd_panel_t *panel, bool on_off)
 {
-    simple_panel_t *simple = (simple_panel_t *)panel->user_data;
+    //simple_panel_t *simple = (simple_panel_t *)panel->user_data;
 
     // This driver does not support display on/off control
     ESP_LOGI(TAG, "Display on/off control called (on_off=%d) - not supported, returning success", on_off);
@@ -265,7 +265,7 @@ static esp_err_t panel_simple_disp_on_off(esp_lcd_panel_t *panel, bool on_off)
 
 static esp_err_t panel_simple_sleep(esp_lcd_panel_t *panel, bool sleep)
 {
-    simple_panel_t *simple = (simple_panel_t *)panel->user_data;
+    //simple_panel_t *simple = (simple_panel_t *)panel->user_data;
 
     // This driver does not support sleep control
     ESP_LOGI(TAG, "Sleep control called (sleep=%d) - not supported, returning success", sleep);

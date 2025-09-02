@@ -281,9 +281,9 @@
      */
     #define ESP_PANEL_BOARD_BACKLIGHT_I2C_INIT_SEQUENCE \
         { \
-            {0x86, 0xFF, 1000},  /* Set max brightness */ \
-            {0x86, 0x00, 1000},  /* Turn off */ \
-            {0x86, 0xFF, 1000}   /* Turn on with max brightness */ \
+            {0x86, 0xFF, 100},  /* Set max brightness */ \
+            {0x86, 0x00, 100},  /* Turn off */ \
+            {0x86, 0xFF, 100}   /* Turn on with max brightness */ \
         }
 
     /**
