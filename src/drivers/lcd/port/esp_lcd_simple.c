@@ -140,10 +140,12 @@ err:
     return ret;
 }
 
-static const esp_panel_lcd_vendor_init_cmd_t vendor_specific_init_default[] = {
-    // {cmd, { data }, data_size, delay_ms}
-    // No initialization commands for simple driver
-};
+#if defined(ESP_PANEL_BOARD_LCD_VENDOR_INIT_CMD)
+    static const esp_panel_lcd_vendor_init_cmd_t vendor_specific_init_default[]=ESP_PANEL_BOARD_LCD_VENDOR_INIT_CMD;
+#else
+    static const esp_panel_lcd_vendor_init_cmd_t vendor_specific_init_default[]={};
+#endif
+
 
 static esp_err_t panel_simple_del(esp_lcd_panel_t *panel)
 {
@@ -167,7 +169,7 @@ static esp_err_t panel_simple_init(esp_lcd_panel_t *panel)
 {
     ESP_LOGI(TAG, "panel_simple_init");
     simple_panel_t *simple = (simple_panel_t *)panel->user_data;
-    //esp_lcd_panel_io_handle_t io = simple->io;
+    esp_lcd_panel_io_handle_t io = simple->io;
     const esp_panel_lcd_vendor_init_cmd_t *init_cmds = NULL;
     uint16_t init_cmds_size = 0;
     bool is_cmd_overwritten = false;
@@ -179,7 +181,9 @@ static esp_err_t panel_simple_init(esp_lcd_panel_t *panel)
         init_cmds_size = simple->init_cmds_size;
     } else {
         init_cmds = vendor_specific_init_default;
-        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(esp_panel_lcd_vendor_init_cmd_t);
+        if(sizeof(vendor_specific_init_default)){
+            init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(esp_panel_lcd_vendor_init_cmd_t);
+        } 
     }
 
     for (int i = 0; i < init_cmds_size; i++) {
@@ -206,7 +210,7 @@ static esp_err_t panel_simple_init(esp_lcd_panel_t *panel)
         }
 
         // Send command - but for simple driver, we skip this
-        // ESP_RETURN_ON_ERROR(esp_lcd_panel_io_tx_param(io, init_cmds[i].cmd, init_cmds[i].data, init_cmds[i].data_bytes), TAG, "send command failed");
+        ESP_RETURN_ON_ERROR(esp_lcd_panel_io_tx_param(io, init_cmds[i].cmd, init_cmds[i].data, init_cmds[i].data_bytes), TAG, "send command failed");
         ESP_LOGI(TAG, "Skipping command 0x%02X for simple driver", init_cmds[i].cmd);
 
         if (init_cmds[i].delay_ms > 0) {
