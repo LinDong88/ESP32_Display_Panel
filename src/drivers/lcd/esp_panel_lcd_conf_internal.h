@@ -38,6 +38,7 @@
         #define ESP_PANEL_DRIVERS_LCD_USE_SH8601 (1)
         #define ESP_PANEL_DRIVERS_LCD_USE_SPD2010 (1)
         #define ESP_PANEL_DRIVERS_LCD_USE_ST7262 (1)
+        #define ESP_PANEL_DRIVERS_LCD_USE_ST7102 (1)
         #define ESP_PANEL_DRIVERS_LCD_USE_ST7701 (1)
         #define ESP_PANEL_DRIVERS_LCD_USE_ST7703 (1)
         #define ESP_PANEL_DRIVERS_LCD_USE_ST7789 (1)
@@ -164,6 +165,14 @@
                 #define ESP_PANEL_DRIVERS_LCD_USE_ST7262 CONFIG_ESP_PANEL_DRIVERS_LCD_USE_ST7262
             #else
                 #define ESP_PANEL_DRIVERS_LCD_USE_ST7262 (0)
+            #endif
+        #endif
+
+        #ifndef ESP_PANEL_DRIVERS_LCD_USE_ST7102
+            #ifdef CONFIG_ESP_PANEL_DRIVERS_LCD_USE_ST7102
+                #define ESP_PANEL_DRIVERS_LCD_USE_ST7102 CONFIG_ESP_PANEL_DRIVERS_LCD_USE_ST7102
+            #else
+                #define ESP_PANEL_DRIVERS_LCD_USE_ST7102 (0)
             #endif
         #endif
 
@@ -361,6 +370,14 @@
         #define ESP_PANEL_DRIVERS_LCD_ENABLE_ST7262  (1)
     #else
         #define ESP_PANEL_DRIVERS_LCD_ENABLE_ST7262  (0)
+    #endif
+#endif
+
+#ifndef ESP_PANEL_DRIVERS_LCD_ENABLE_ST7102
+    #if ESP_PANEL_DRIVERS_LCD_COMPILE_UNUSED_DRIVERS || ESP_PANEL_DRIVERS_LCD_USE_ST7102
+        #define ESP_PANEL_DRIVERS_LCD_ENABLE_ST7102  (1)
+    #else
+        #define ESP_PANEL_DRIVERS_LCD_ENABLE_ST7102  (0)
     #endif
 #endif
 

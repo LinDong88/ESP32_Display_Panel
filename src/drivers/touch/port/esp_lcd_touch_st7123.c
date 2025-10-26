@@ -172,10 +172,14 @@ static bool get_xy(esp_lcd_touch_handle_t tp, uint16_t *x, uint16_t *y, uint16_t
         if (strength) {
             strength[i] = tp->data.coords[i].strength;
         }
+        
     }
     /* Clear available touch points count */
     tp->data.points = 0;
     portEXIT_CRITICAL(&tp->data.lock);
+    if(*point_num > 0){
+        ESP_LOGI(TAG, "Touch point: x: %d, y: %d", x[0], y[0]);
+    }
 
     return (*point_num > 0);
 }

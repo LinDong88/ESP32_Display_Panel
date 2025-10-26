@@ -65,6 +65,10 @@ menu "LCD"
                 bool "Use ST7262"
                 default n
 
+            config ESP_PANEL_DRIVERS_LCD_USE_ST7102
+                bool "Use ST7102"
+                default n
+
             config ESP_PANEL_DRIVERS_LCD_USE_ST7701
                 bool "Use ST7701"
                 default n

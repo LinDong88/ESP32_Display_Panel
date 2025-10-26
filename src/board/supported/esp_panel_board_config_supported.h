@@ -121,6 +121,7 @@
         + defined(BOARD_VIEWE_UEDX80480050E_AC_A) \
         + defined(BOARD_VIEWE_UEDX80480070E_WB_A) \
         /* DFRobot */ \
+        + defined(BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_4_3) \
         + defined(BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_5) \
         + defined(BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_8_8) \
         > 1
@@ -229,6 +230,8 @@
     #elif defined(BOARD_VIEWE_UEDX80480070E_WB_A)
         #include "viewe/BOARD_VIEWE_UEDX80480070E_WB_A.h"
     /* DFRobot */
+    #elif defined(BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_4_3)
+        #include "dfrobot/BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_4_3.h"
     #elif defined(BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_5)
         #include "dfrobot/BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_5.h"
     #elif defined(BOARD_DFROBOT_FIREBEETLE_ESP32_P4_LCD_8_8)
