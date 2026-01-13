@@ -19,12 +19,12 @@ using namespace esp_panel::drivers;
  *      - JD9165, JD9365
  *      - ST7701, ST7703, ST7796, ST77922
  */
-#define EXAMPLE_LCD_NAME                EK79007
-#define EXAMPLE_LCD_WIDTH               (1024)
-#define EXAMPLE_LCD_HEIGHT              (600)
-#define EXAMPLE_LCD_COLOR_BITS          (ESP_PANEL_LCD_COLOR_BITS_RGB888)
+#define EXAMPLE_LCD_NAME                SIMPLE
+#define EXAMPLE_LCD_WIDTH               (480)
+#define EXAMPLE_LCD_HEIGHT              (800)
+#define EXAMPLE_LCD_COLOR_BITS          (ESP_PANEL_LCD_COLOR_BITS_RGB565)
                                                 // or `ESP_PANEL_LCD_COLOR_BITS_RGB565`
-#define EXAMPLE_LCD_DSI_PHY_LDO_ID      (3)     // -1 if not used
+#define EXAMPLE_LCD_DSI_PHY_LDO_ID      (-1)     // -1 if not used
 #define EXAMPLE_LCD_DSI_LANE_NUM        (2)     // ESP32-P4 supports 1 or 2 lanes
 #define EXAMPLE_LCD_DSI_LANE_RATE_MBPS  (1000)  /* Single lane bit rate, should consult the LCD supplier or check the
                                                  * LCD drive IC datasheet for the supported lane rate.
@@ -65,8 +65,8 @@ const esp_panel_lcd_vendor_init_cmd_t lcd_init_cmd[] = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////// Please update the following configuration according to your board spec ////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#define EXAMPLE_LCD_RST_IO          (27)    // Set to -1 if not used
-#define EXAMPLE_LCD_BL_IO           (26)    // Set to -1 if not used
+#define EXAMPLE_LCD_RST_IO          (10)    // Set to -1 if not used
+#define EXAMPLE_LCD_BL_IO           (-1)    // Set to -1 if not used
 #define EXAMPLE_LCD_BL_ON_LEVEL     (1)
 #define EXAMPLE_LCD_BL_OFF_LEVEL    (!EXAMPLE_LCD_BL_ON_LEVEL)
 
@@ -77,7 +77,7 @@ const esp_panel_lcd_vendor_init_cmd_t lcd_init_cmd[] = {
 #define EXAMPLE_LCD_ENABLE_PRINT_FPS            (1)
 #define EXAMPLE_LCD_ENABLE_DRAW_FINISH_CALLBACK (1)
 #define EXAMPLE_LCD_ENABLE_DSI_PATTERN_TEST     (1)
-
+// LCD_ST7701();
 #define _EXAMPLE_LCD_CLASS(name, ...)   LCD_##name(__VA_ARGS__)
 #define EXAMPLE_LCD_CLASS(name, ...)    _EXAMPLE_LCD_CLASS(name, ##__VA_ARGS__)
 
@@ -145,7 +145,8 @@ static LCD *create_lcd_with_config(void)
      * Take `ILI9881C` as an example, the following is the actual code after macro expansion:
      *      LCD_ILI9881C(bus_config, lcd_config);
      */
-    return new EXAMPLE_LCD_CLASS(EXAMPLE_LCD_NAME, bus_config, lcd_config);
+    // return new EXAMPLE_LCD_CLASS(EXAMPLE_LCD_NAME, bus_config, lcd_config);
+    return new LCD_SIMPLE();
 }
 
 #if EXAMPLE_LCD_ENABLE_PRINT_FPS
@@ -188,7 +189,10 @@ IRAM_ATTR bool onLCD_DrawFinishCallback(void *user_data)
 void setup()
 {
     Serial.begin(115200);
-
+  pinMode(10, OUTPUT);
+  digitalWrite(10, 0);
+  delay(100);
+  digitalWrite(10, HIGH);
 #if EXAMPLE_LCD_BL_IO >= 0
     Serial.println("Initializing backlight and turn it on");
     BacklightPWM_LEDC *backlight = new BacklightPWM_LEDC(EXAMPLE_LCD_BL_IO, EXAMPLE_LCD_BL_ON_LEVEL);

@@ -108,6 +108,8 @@ bool IO_ExpanderAdapter<T>::init()
 
     // Since the host full configuration is converted from the partial configuration, we need to call `init` to
     // get the full configuration
+    ESP_UTILS_CHECK_FALSE_RETURN(T::init(), false, "Init base failed");
+
     if (!this->IO_Expander::isSkipInitHost()) {
         ESP_UTILS_CHECK_FALSE_RETURN(
             std::holds_alternative<esp_expander::Base::HostFullConfig>(this->getConfig().host.value()),
@@ -155,6 +157,7 @@ template <class T>
 bool IO_ExpanderAdapter<T>::del()
 {
     ESP_UTILS_LOG_TRACE_ENTER_WITH_THIS();
+    ESP_UTILS_CHECK_FALSE_RETURN(T::del(), false, "Delete base failed");
 
     if (_host != nullptr) {
         _host = nullptr;
@@ -164,7 +167,6 @@ bool IO_ExpanderAdapter<T>::del()
         );
     }
 
-    ESP_UTILS_CHECK_FALSE_RETURN(T::del(), false, "Delete base failed");
 
     ESP_UTILS_LOG_TRACE_EXIT_WITH_THIS();
 

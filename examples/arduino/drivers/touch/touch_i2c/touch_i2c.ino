@@ -22,26 +22,26 @@ using namespace esp_panel::drivers;
  *      - TT21100
  *      - ST1633, ST7123
  */
-#define EXAMPLE_TOUCH_NAME              GT911
+#define EXAMPLE_TOUCH_NAME              ST7123
 #define EXAMPLE_TOUCH_ADDRESS           (0)     // Typically set to 0 to use the default address.
                                                 // - For touchs with only one address, set to 0
                                                 // - For touchs with multiple addresses, set to 0 or the address
                                                 //   Like GT911, there are two addresses: 0x5D(default) and 0x14
-#define EXAMPLE_TOUCH_WIDTH             (320)
-#define EXAMPLE_TOUCH_HEIGHT            (240)
-#define EXAMPLE_TOUCH_I2C_FREQ_HZ       (400 * 1000)
+#define EXAMPLE_TOUCH_WIDTH             (480)
+#define EXAMPLE_TOUCH_HEIGHT            (800)
+#define EXAMPLE_TOUCH_I2C_FREQ_HZ       (100 * 1000) 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////// Please update the following configuration according to your board spec ////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#define EXAMPLE_TOUCH_I2C_IO_SCL        (18)
-#define EXAMPLE_TOUCH_I2C_IO_SDA        (8)
+#define EXAMPLE_TOUCH_I2C_IO_SCL        (8)
+#define EXAMPLE_TOUCH_I2C_IO_SDA        (7)
 #define EXAMPLE_TOUCH_I2C_SCL_PULLUP    (1)  // 0/1
 #define EXAMPLE_TOUCH_I2C_SDA_PULLUP    (1)  // 0/1
-#define EXAMPLE_TOUCH_RST_IO            (48) // Set to `-1` if not used
+#define EXAMPLE_TOUCH_RST_IO            (0) // Set to `-1` if not used
                                              // For GT911, the RST pin is also used to configure the I2C address
-#define EXAMPLE_TOUCH_RST_ACTIVE_LEVEL  (1)  // Set to `0` if reset is active low
-#define EXAMPLE_TOUCH_INT_IO            (3)  // Set to `-1` if not used
+#define EXAMPLE_TOUCH_RST_ACTIVE_LEVEL  (0)  // Set to `0` if reset is active low
+#define EXAMPLE_TOUCH_INT_IO            (-1)  // Set to `-1` if not used
                                              // For GT911, the INT pin is also used to configure the I2C address
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,6 +124,19 @@ void setup()
 {
     Serial.begin(115200);
 
+
+    esp_rom_printf("pinMode power\n");
+    pinMode(13, OUTPUT);
+    digitalWrite(13, 1);
+
+
+    pinMode(10, OUTPUT);
+    digitalWrite(10, 0);
+    delay(100);
+    digitalWrite(10, HIGH);
+    delay(5000);
+    esp_rom_printf("digitalWrite power\n");
+
 #if EXAMPLE_TOUCH_ENABLE_CREATE_WITH_CONFIG
     Serial.println("Initializing \"I2C\" touch with config");
     touch = create_touch_with_config();
@@ -141,18 +154,26 @@ void setup()
 #endif
 
     /* Startup the LCD and operate it */
-    assert(touch->begin());
+    esp_rom_printf("\n148\n");
+    // while(1){
+    touch->begin();
+    //     delay(100);
+
+    // }
+    
+    // assert();
 #if EXAMPLE_TOUCH_ENABLE_INTERRUPT_CALLBACK
     if (touch->isInterruptEnabled()) {
         touch->attachInterruptCallback(onTouchInterruptCallback);
     }
 #endif
 
-    Serial.println("Reading touch points and buttons...");
+     esp_rom_printf("end\n");
 }
 
 void loop()
 {
+    // esp_rom_printf("------\n");
     // Read all touch points and buttons
     touch->readRawData(-1, -1, EXAMPLE_TOUCH_READ_PERIOD_MS);
 
@@ -160,14 +181,14 @@ void loop()
     int i = 0;
     touch->getPoints(points);
     for (auto &point : points) {
-        Serial.printf("Touch point(%d): x %d, y %d, strength %d\n", i++, point.x, point.y, point.strength);
+        esp_rom_printf("Touch point(%d): x %d, y %d, strength %d\n", i++, point.x, point.y, point.strength);
     }
 
     std::vector<TouchButton> buttons;
     i = 0;
     touch->getButtons(buttons);
     for (auto &button : buttons) {
-        Serial.printf("Touch button(%d): %d\n", i++, button.second);
+        esp_rom_printf("Touch button(%d): %d\n", i++, button.second);
     }
 
     if (!touch->isInterruptEnabled()) {

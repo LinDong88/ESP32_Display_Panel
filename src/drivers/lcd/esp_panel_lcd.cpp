@@ -16,6 +16,10 @@
 #include "utils/esp_panel_utils_log.h"
 #include "esp_panel_lcd.hpp"
 
+
+#undef ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+#define ESP_PANEL_DRIVERS_BUS_ENABLE_RGB 0
+
 namespace esp_panel::drivers {
 
 void LCD::BasicBusSpecification::print(utils::string bus_name) const
@@ -365,15 +369,15 @@ bool LCD::configFrameBufferNumber(int num)
 
     auto bus_type = getBus()->getBasicAttributes().type;
     switch (bus_type) {
-#if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
-    case ESP_PANEL_BUS_TYPE_RGB: {
-        ESP_UTILS_CHECK_FALSE_RETURN(
-            static_cast<BusRGB *>(getBus())->configRGB_FrameBufferNumber(num), false,
-            "Config RGB frame buffer number failed"
-        );
-        break;
-    }
-#endif // ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+// #if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+//     case ESP_PANEL_BUS_TYPE_RGB: {
+//         ESP_UTILS_CHECK_FALSE_RETURN(
+//             static_cast<BusRGB *>(getBus())->configRGB_FrameBufferNumber(num), false,
+//             "Config RGB frame buffer number failed"
+//         );
+//         break;
+//     }
+// #endif // ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
 #if ESP_PANEL_DRIVERS_BUS_ENABLE_MIPI_DSI
     case ESP_PANEL_BUS_TYPE_MIPI_DSI: {
         ESP_UTILS_CHECK_FALSE_RETURN(
@@ -430,30 +434,30 @@ bool LCD::begin()
     /*  Register callback for different bus */
     _interruption.data.lcd_ptr = this;
     switch (bus_type) {
-#if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
-    case ESP_PANEL_BUS_TYPE_RGB: {
-        auto rgb_config = getBusRGB_RefreshPanelFullConfig();
-        ESP_UTILS_CHECK_NULL_RETURN(rgb_config, false, "Invalid RGB config");
+// #if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+//     case ESP_PANEL_BUS_TYPE_RGB: {
+//         auto rgb_config = getBusRGB_RefreshPanelFullConfig();
+//         ESP_UTILS_CHECK_NULL_RETURN(rgb_config, false, "Invalid RGB config");
 
-        esp_lcd_rgb_panel_event_callbacks_t rgb_event_cb = {};
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 4, 0)
-        rgb_event_cb.on_frame_buf_complete = (esp_lcd_rgb_panel_frame_buf_complete_cb_t)onRefreshFinish;
-#else
-        if (rgb_config->bounce_buffer_size_px == 0) {
-            // When bounce buffer is disabled, use `on_vsync` callback to notify draw bitmap finish
-            rgb_event_cb.on_vsync = (esp_lcd_rgb_panel_vsync_cb_t)onRefreshFinish;
-        } else {
-            // When bounce buffer is enabled, use `on_bounce_frame_finish` callback to notify draw bitmap finish
-            rgb_event_cb.on_bounce_frame_finish = (esp_lcd_rgb_panel_bounce_buf_finish_cb_t)onRefreshFinish;
-        }
-#endif
-        ESP_UTILS_CHECK_ERROR_RETURN(
-            esp_lcd_rgb_panel_register_event_callbacks(refresh_panel, &rgb_event_cb, &_interruption.data), false,
-            "Register RGB event callback failed"
-        );
-        break;
-    }
-#endif
+//         esp_lcd_rgb_panel_event_callbacks_t rgb_event_cb = {};
+// #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 4, 0)
+//         rgb_event_cb.on_frame_buf_complete = (esp_lcd_rgb_panel_frame_buf_complete_cb_t)onRefreshFinish;
+// #else
+//         if (rgb_config->bounce_buffer_size_px == 0) {
+//             // When bounce buffer is disabled, use `on_vsync` callback to notify draw bitmap finish
+//             rgb_event_cb.on_vsync = (esp_lcd_rgb_panel_vsync_cb_t)onRefreshFinish;
+//         } else {
+//             // When bounce buffer is enabled, use `on_bounce_frame_finish` callback to notify draw bitmap finish
+//             rgb_event_cb.on_bounce_frame_finish = (esp_lcd_rgb_panel_bounce_buf_finish_cb_t)onRefreshFinish;
+//         }
+// #endif
+//         ESP_UTILS_CHECK_ERROR_RETURN(
+//             esp_lcd_rgb_panel_register_event_callbacks(refresh_panel, &rgb_event_cb, &_interruption.data), false,
+//             "Register RGB event callback failed"
+//         );
+//         break;
+//     }
+// #endif
 #if ESP_PANEL_DRIVERS_BUS_ENABLE_MIPI_DSI
     case ESP_PANEL_BUS_TYPE_MIPI_DSI: {
         esp_lcd_dpi_panel_event_callbacks_t dpi_event_cb = {
@@ -931,15 +935,15 @@ int LCD::getFrameColorBits()
 
     int bits_per_pixel = -1;
     switch (getBus()->getBasicAttributes().type) {
-#if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
-    case ESP_PANEL_BUS_TYPE_RGB: {
-        auto rgb_config = getBusRGB_RefreshPanelFullConfig();
-        ESP_UTILS_CHECK_NULL_RETURN(rgb_config, -1, "Invalid RGB config");
+// #if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+//     case ESP_PANEL_BUS_TYPE_RGB: {
+//         auto rgb_config = getBusRGB_RefreshPanelFullConfig();
+//         ESP_UTILS_CHECK_NULL_RETURN(rgb_config, -1, "Invalid RGB config");
 
-        bits_per_pixel = rgb_config->bits_per_pixel;
-        break;
-    }
-#endif // ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+//         bits_per_pixel = rgb_config->bits_per_pixel;
+//         break;
+//     }
+// #endif // ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
 #if ESP_PANEL_DRIVERS_BUS_ENABLE_MIPI_DSI
     case ESP_PANEL_BUS_TYPE_MIPI_DSI: {
         auto dpi_config = getBusDSI_RefreshPanelFullConfig();
@@ -1073,20 +1077,20 @@ bool LCD::processDeviceOnInit(const BasicBusSpecificationMap &bus_specs)
     }
 // *INDENT-ON*
 
-#if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
-    // When using RGB bus, if the bus doesn't support the `display_on_off` function, disable it
-    if (bus_type == ESP_PANEL_BUS_TYPE_RGB) {
-        auto rgb_config = getBusRGB_RefreshPanelFullConfig();
-        ESP_UTILS_CHECK_NULL_RETURN(rgb_config, false, "Invalid RGB config");
+// #if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+//     // When using RGB bus, if the bus doesn't support the `display_on_off` function, disable it
+//     if (bus_type == ESP_PANEL_BUS_TYPE_RGB) {
+//         auto rgb_config = getBusRGB_RefreshPanelFullConfig();
+//         ESP_UTILS_CHECK_NULL_RETURN(rgb_config, false, "Invalid RGB config");
 
-        auto &vendor_config = getVendorFullConfig();
-        if ((rgb_config->disp_gpio_num == -1) && ((bus->getControlPanelHandle() == nullptr) ||
-                vendor_config.flags.enable_io_multiplex)) {
-            ESP_UTILS_LOGD("Not support `display_on_off` function, disable it");
-            bus_spec.functions.reset(static_cast<int>(BasicBusSpecification::FUNC_DISPLAY_ON_OFF));
-        }
-    }
-#endif // ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+//         auto &vendor_config = getVendorFullConfig();
+//         if ((rgb_config->disp_gpio_num == -1) && ((bus->getControlPanelHandle() == nullptr) ||
+//                 vendor_config.flags.enable_io_multiplex)) {
+//             ESP_UTILS_LOGD("Not support `display_on_off` function, disable it");
+//             bus_spec.functions.reset(static_cast<int>(BasicBusSpecification::FUNC_DISPLAY_ON_OFF));
+//         }
+//     }
+// #endif // ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
 
     // Load the vendor configuration from the bus to the device
     ESP_UTILS_LOGD("Load vendor configuration from the bus");
@@ -1098,19 +1102,19 @@ bool LCD::processDeviceOnInit(const BasicBusSpecificationMap &bus_specs)
     case ESP_PANEL_BUS_TYPE_QSPI:
         vendor_config.flags.use_qspi_interface = 1;
         break;
-#if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
-    /* Retrieve RGB configuration from the bus and register it into the vendor configuration */
-    case ESP_PANEL_BUS_TYPE_RGB: {
-        auto rgb_config = getBusRGB_RefreshPanelFullConfig();
-        ESP_UTILS_CHECK_NULL_RETURN(rgb_config, false, "Invalid RGB config");
+// #if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+//     /* Retrieve RGB configuration from the bus and register it into the vendor configuration */
+//     case ESP_PANEL_BUS_TYPE_RGB: {
+//         auto rgb_config = getBusRGB_RefreshPanelFullConfig();
+//         ESP_UTILS_CHECK_NULL_RETURN(rgb_config, false, "Invalid RGB config");
 
-        vendor_config.hor_res = rgb_config->timings.h_res;
-        vendor_config.ver_res = rgb_config->timings.v_res;
-        vendor_config.flags.use_rgb_interface = 1;
-        vendor_config.rgb_config = rgb_config;
-        break;
-    }
-#endif
+//         vendor_config.hor_res = rgb_config->timings.h_res;
+//         vendor_config.ver_res = rgb_config->timings.v_res;
+//         vendor_config.flags.use_rgb_interface = 1;
+//         vendor_config.rgb_config = rgb_config;
+//         break;
+//     }
+// #endif
 #if ESP_PANEL_DRIVERS_BUS_ENABLE_MIPI_DSI
     /* Retrieve MIPI DPI configuration from the bus and register it into the vendor configuration */
     case ESP_PANEL_BUS_TYPE_MIPI_DSI: {
@@ -1176,26 +1180,26 @@ LCD::VendorFullConfig &LCD::getVendorFullConfig()
     return std::get<VendorFullConfig>(_config.vendor);
 }
 
-#if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
-const BusRGB::RefreshPanelFullConfig *LCD::getBusRGB_RefreshPanelFullConfig()
-{
-    ESP_UTILS_CHECK_FALSE_RETURN(isBusValid(), nullptr, "Invalid bus");
+// #if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+// const BusRGB::RefreshPanelFullConfig *LCD::getBusRGB_RefreshPanelFullConfig()
+// {
+//     ESP_UTILS_CHECK_FALSE_RETURN(isBusValid(), nullptr, "Invalid bus");
 
-    auto bus = getBus();
-    auto bus_type = bus->getBasicAttributes().type;
-    ESP_UTILS_CHECK_FALSE_RETURN(
-        bus_type == ESP_PANEL_BUS_TYPE_RGB, nullptr, "Invalid bus type(%d[%s])", bus_type,
-        BusFactory::getTypeNameString(bus_type).c_str()
-    );
+//     auto bus = getBus();
+//     auto bus_type = bus->getBasicAttributes().type;
+//     ESP_UTILS_CHECK_FALSE_RETURN(
+//         bus_type == ESP_PANEL_BUS_TYPE_RGB, nullptr, "Invalid bus type(%d[%s])", bus_type,
+//         BusFactory::getTypeNameString(bus_type).c_str()
+//     );
 
-    auto &config = static_cast<BusRGB *>(bus)->getConfig();
-    ESP_UTILS_CHECK_FALSE_RETURN(
-        std::holds_alternative<BusRGB::RefreshPanelFullConfig>(config.refresh_panel), nullptr, "Config is not full"
-    );
+//     auto &config = static_cast<BusRGB *>(bus)->getConfig();
+//     ESP_UTILS_CHECK_FALSE_RETURN(
+//         std::holds_alternative<BusRGB::RefreshPanelFullConfig>(config.refresh_panel), nullptr, "Config is not full"
+//     );
 
-    return &std::get<BusRGB::RefreshPanelFullConfig>(config.refresh_panel);
-}
-#endif
+//     return &std::get<BusRGB::RefreshPanelFullConfig>(config.refresh_panel);
+// }
+// #endif
 
 #if ESP_PANEL_DRIVERS_BUS_ENABLE_MIPI_DSI
 const BusDSI::RefreshPanelFullConfig *LCD::getBusDSI_RefreshPanelFullConfig()

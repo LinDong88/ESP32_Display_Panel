@@ -28,6 +28,7 @@ Board::Board():
     Board(ESP_PANEL_BOARD_DEFAULT_CONFIG)
 {
     _use_default_config = true;
+
 }
 #else
 Board::Board()
@@ -190,7 +191,7 @@ bool Board::init()
         ESP_UTILS_CHECK_NULL_RETURN(backlight, false, "Create backlight failed");
         ESP_UTILS_LOGD("Backlight create success");
     }
-
+#if 0
     // Create IO expander device if it is used
     // If the IO expander is already configured, it will not be created again
     std::shared_ptr<drivers::IO_Expander> io_expander = nullptr;
@@ -222,13 +223,13 @@ bool Board::init()
 
         ESP_UTILS_LOGD("IO Expander create success");
     }
-
+#endif
     _lcd_bus = lcd_bus;
     _lcd_device = lcd_device;
     _touch_bus = touch_bus;
     _touch_device = touch_device;
     _backlight = backlight;
-    _io_expander = io_expander;
+    // _io_expander = io_expander;
 
     setState(State::INIT);
 
@@ -259,7 +260,7 @@ bool Board::begin()
             config.stage_callbacks[BoardConfig::STAGE_CALLBACK_PRE_BOARD_BEGIN](this), false, "Board pre-begin failed"
         );
     }
-
+#if 0
     // Begin the IO expander if it is used
     // If the IO expander is already begun, it will not be begun again
     auto io_expander = getIO_Expander();
@@ -286,7 +287,7 @@ bool Board::begin()
 
         ESP_UTILS_LOGD("IO expander begin success");
     }
-
+#endif
     // Begin the LCD if it is used
     auto lcd_device = getLCD();
     if (lcd_device != nullptr) {
@@ -298,7 +299,7 @@ bool Board::begin()
                 config.stage_callbacks[BoardConfig::STAGE_CALLBACK_PRE_LCD_BEGIN](this), false, "LCD pre-begin failed"
             );
         }
-
+#if 0
 #if ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
         drivers::Bus *lcd_bus = lcd_device->getBus();
         // When using "3-wire SPI + RGB" LCD, the IO expander should be configured first
@@ -312,6 +313,7 @@ bool Board::begin()
             );
         }
 #endif // ESP_PANEL_DRIVERS_BUS_ENABLE_RGB
+#endif
         ESP_UTILS_CHECK_FALSE_RETURN(lcd_device->begin(), false, "LCD device begin failed");
         if (lcd_device->isFunctionSupported(drivers::LCD::BasicBusSpecification::FUNC_DISPLAY_ON_OFF)) {
             ESP_UTILS_CHECK_FALSE_RETURN(lcd_device->setDisplayOnOff(true), false, "LCD device set display on failed");
@@ -420,6 +422,7 @@ bool Board::begin()
         }
 
         auto &backlight_config = _config.backlight.value();
+#if 0
 #if ESP_PANEL_DRIVERS_BACKLIGHT_ENABLE_SWITCH_EXPANDER
         // If the backlight is a switch expander, the IO expander should be configured
         if (drivers::BacklightFactory::getConfigType(backlight_config.config) ==
@@ -432,7 +435,7 @@ bool Board::begin()
             }
         }
 #endif // ESP_PANEL_DRIVERS_BACKLIGHT_ENABLE_SWITCH_EXPANDER
-
+#endif
         ESP_UTILS_CHECK_FALSE_RETURN(backlight->begin(), false, "Backlight begin failed");
         if (backlight_config.pre_process.idle_off) {
             ESP_UTILS_CHECK_FALSE_RETURN(backlight->off(), false, "Backlight off failed");

@@ -260,7 +260,9 @@ private:
      */
     bool isIO_ExpanderUsed()
     {
-        return _config.io_expander.has_value();
+        // return _config.io_expander.has_value();
+
+        return true;
     }
 
     BoardConfig _config = {};

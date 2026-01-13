@@ -363,7 +363,7 @@ bool BusDSI::del()
 
 BusDSI::HostHandle BusDSI::getHostHandle()
 {
-    return (_host == nullptr) ? nullptr : static_cast<esp_lcd_dsi_bus_handle_t>(_host->getHandle());
+    return (_host == nullptr) ? nullptr : static_cast<esp_lcd_dsi_bus_handle_t>(_host->getNativeHandle());
 }
 
 BusDSI::HostFullConfig &BusDSI::getHostFullConfig()

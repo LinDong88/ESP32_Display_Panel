@@ -26,7 +26,9 @@ public:
      * @brief Configuration type alias
      */
     using Config = esp_expander::Base::Config;
-    using HostPartialConfig = esp_expander::Base::HostPartialConfig;
+    // using DevicePartialConfig = esp_expander::Base::DevicePartialConfig;
+    using DevicePartialConfig = esp_expander::Base::HostPartialConfig;
+
 
     /**
      * @brief Construct a new IO expander device

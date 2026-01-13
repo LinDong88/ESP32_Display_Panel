@@ -19,7 +19,7 @@ HostDSI::~HostDSI()
     if (isOverState(State::BEGIN)) {
         int id = getID();
         ESP_UTILS_CHECK_ERROR_EXIT(
-            esp_lcd_del_dsi_bus(static_cast<esp_lcd_dsi_bus_handle_t>(host_handle)), "Delete DSI host(%d) failed", id
+            esp_lcd_del_dsi_bus(static_cast<esp_lcd_dsi_bus_handle_t>(handle_ )), "Delete DSI host(%d) failed", id
         );
         ESP_UTILS_LOGD("Delete DSI host(%d)", id);
 
@@ -40,8 +40,8 @@ bool HostDSI::begin()
     {
         int id = getID();
         esp_lcd_dsi_bus_handle_t host = nullptr;
-        ESP_UTILS_CHECK_ERROR_RETURN(esp_lcd_new_dsi_bus(&config, &host), false, "Initialize DSI host(%d) failed", id);
-        host_handle = host;
+        ESP_UTILS_CHECK_ERROR_RETURN(esp_lcd_new_dsi_bus(&config_, &host), false, "Initialize DSI host(%d) failed", id);
+        handle_  = host;
         ESP_UTILS_LOGD("Initialize DSI host(%d)", id);
     }
 
@@ -53,18 +53,18 @@ end:
     return true;
 }
 
-bool HostDSI::calibrateConfig(const esp_lcd_dsi_bus_config_t &config)
+bool HostDSI::calibrateConfig(const esp_lcd_dsi_bus_config_t &config_)
 {
-    if (memcmp(&config, &this->config, sizeof(esp_lcd_dsi_bus_config_t))) {
+    if (memcmp(&config_, &this->config_, sizeof(esp_lcd_dsi_bus_config_t))) {
         ESP_UTILS_LOGI(
-            "Original config: bus_id(%d), num_data_lanes(%d), phy_clk_src(%d), lane_bit_rate_mbps(%d)",
-            this->config.bus_id, this->config.num_data_lanes, static_cast<int>(this->config.phy_clk_src),
-            static_cast<int>(this->config.lane_bit_rate_mbps)
+            "Original config_: bus_id(%d), num_data_lanes(%d), phy_clk_src(%d), lane_bit_rate_mbps(%d)",
+            this->config_.bus_id, this->config_.num_data_lanes, static_cast<int>(this->config_.phy_clk_src),
+            static_cast<int>(this->config_.lane_bit_rate_mbps)
         );
         ESP_UTILS_LOGI(
-            "New config: bus_id(%d), num_data_lanes(%d), phy_clk_src(%d), lane_bit_rate_mbps(%d)",
-            config.bus_id, config.num_data_lanes, static_cast<int>(config.phy_clk_src),
-            static_cast<int>(config.lane_bit_rate_mbps)
+            "New config_: bus_id(%d), num_data_lanes(%d), phy_clk_src(%d), lane_bit_rate_mbps(%d)",
+            config_.bus_id, config_.num_data_lanes, static_cast<int>(config_.phy_clk_src),
+            static_cast<int>(config_.lane_bit_rate_mbps)
         );
         ESP_UTILS_CHECK_FALSE_RETURN(false, false, "Config mismatch");
     }

@@ -107,7 +107,7 @@ struct BoardConfig {
     std::optional<LCD_Config> lcd;                  /*!< LCD configuration */
     std::optional<TouchConfig> touch;               /*!< Touch configuration */
     std::optional<BacklightConfig> backlight;       /*!< Backlight configuration */
-    std::optional<IO_ExpanderConfig> io_expander;   /*!< IO expander configuration */
+    // std::optional<IO_ExpanderConfig> io_expander;   /*!< IO expander configuration */
     std::array<FunctionStageCallback, STAGE_CALLBACK_MAX> stage_callbacks; /*!< Stage callback functions */
 };
 

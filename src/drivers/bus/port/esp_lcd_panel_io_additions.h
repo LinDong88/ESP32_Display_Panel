@@ -46,6 +46,7 @@ typedef struct {
         esp_io_expander_pin_num_t sda_expander_pin; /*!< IO expander pin used for SDA line */
     };
     esp_io_expander_handle_t io_expander;           /*!< IO expander handle, set to NULL if not used */
+    // esp_io_expander_handle_t NULL;
 } spi_line_config_t;
 
 /**

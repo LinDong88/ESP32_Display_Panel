@@ -26,7 +26,11 @@ esp_err_t esp_panel_backlight_i2c_init(const esp_panel_backlight_i2c_config_t *c
     // Check if I2C driver is already installed by trying a simple I2C operation
     // We'll use a dummy write to test if I2C is working
     uint8_t dummy_data[1] = {0};
-    esp_err_t ret = i2c_master_write_to_device(config->i2c_port, 0x00, dummy_data, 1, pdMS_TO_TICKS(10));
+    // my code
+    esp_err_t ret=0;
+    // esp_err_t ret = i2c_master_transmit((i2c_master_bus_handle_t)(_host->getNativeHandle()), dummy_data, 1, pdMS_TO_TICKS(10));
+
+
     if (ret == ESP_ERR_INVALID_STATE) {
         ESP_LOGE(TAG, "I2C driver not installed on port %d. Please ensure I2C is initialized by touch or other component first", config->i2c_port);
         return ret;
@@ -53,8 +57,10 @@ esp_err_t esp_panel_backlight_i2c_init(const esp_panel_backlight_i2c_config_t *c
         
         // Create write buffer with command and data
         uint8_t write_buf[2] = {cmd->command, cmd->data};
-        ret = i2c_master_write_to_device(config->i2c_port, config->i2c_addr, 
-                                       write_buf, sizeof(write_buf), pdMS_TO_TICKS(100));
+        // my code
+        esp_err_t ret=0;
+        // ret = i2c_master_transmit((i2c_master_bus_handle_t)(_host->getNativeHandle()),
+        //                                write_buf, sizeof(write_buf), pdMS_TO_TICKS(100));
         if (ret != ESP_OK) {
             ESP_LOGE(TAG, "Failed to send init command %d: %s", i, esp_err_to_name(ret));
             return ret;
@@ -98,8 +104,10 @@ esp_err_t esp_panel_backlight_i2c_set_brightness(int percent)
     
     // Send brightness command
     uint8_t write_buf[2] = {g_i2c_config.brightness_cmd, (uint8_t)brightness_value};
-    esp_err_t ret = i2c_master_write_to_device(g_i2c_config.i2c_port, g_i2c_config.i2c_addr, 
-                                             write_buf, sizeof(write_buf), pdMS_TO_TICKS(100));
+    // my code
+    esp_err_t ret=0;
+    // esp_err_t ret = i2c_master_transmit((i2c_master_bus_handle_t)(_host->getNativeHandle()),
+    //                                          write_buf, sizeof(write_buf), pdMS_TO_TICKS(100));
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to set brightness: %s", esp_err_to_name(ret));
         return ret;
@@ -119,9 +127,11 @@ esp_err_t esp_panel_backlight_i2c_set_power(bool on)
     
     ESP_LOGI(TAG, "Setting power: %s -> value: 0x%02X", on ? "ON" : "OFF", data);
     ESP_LOGI(TAG, "Sending I2C command: cmd=0x%02X, data=0x%02X", g_i2c_config.power_cmd, data);
+    // my code
+    esp_err_t ret=0;
+    // esp_err_t ret = i2c_master_transmit((i2c_master_bus_handle_t)(_host->getNativeHandle()),
+    //                                          write_buf, sizeof(write_buf), pdMS_TO_TICKS(100));
     
-    esp_err_t ret = i2c_master_write_to_device(g_i2c_config.i2c_port, g_i2c_config.i2c_addr, 
-                                             write_buf, sizeof(write_buf), pdMS_TO_TICKS(100));
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to set power: %s", esp_err_to_name(ret));
         return ret;

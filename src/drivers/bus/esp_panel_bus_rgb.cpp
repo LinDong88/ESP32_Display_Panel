@@ -561,13 +561,13 @@ bool BusRGB::configSpiLine(
         !isOverState(State::INIT), false, "Should be called before `init()`"
     );
 
-    ESP_UTILS_LOGD(
-        "Param: cs_use_expander(%d), sck_use_expander(%d), sda_use_expander(%d), io_expander(@%p)",
-        cs_use_expander, sck_use_expander, sda_use_expander, io_expander
-    );
-    ESP_UTILS_CHECK_FALSE_RETURN(
-        configSPI_IO_Expander(io_expander->getDeviceHandle()), false, "config SPI IO expander failed"
-    );
+    // ESP_UTILS_LOGD(
+    //     "Param: cs_use_expander(%d), sck_use_expander(%d), sda_use_expander(%d), io_expander(@%p)",
+    //     cs_use_expander, sck_use_expander, sda_use_expander, io_expander
+    // );
+    // ESP_UTILS_CHECK_FALSE_RETURN(
+    //     configSPI_IO_Expander(io_expander->getDeviceHandle()), false, "config SPI IO expander failed"
+    // );
     ESP_UTILS_CHECK_FALSE_RETURN(
         configSPI_IO_Type(cs_use_expander, sck_use_expander, sda_use_expander), false, "config SPI IO type failed"
     );

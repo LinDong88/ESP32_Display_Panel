@@ -744,9 +744,8 @@ using ESP_PanelTouch [[deprecated("Use `esp_panel::drivers::Touch` instead")]] =
  * Taking GT911 as an example, the following is the actual code after macro expansion:
  *      ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG(GT911) => ESP_LCD_TOUCH_IO_I2C_GT911_CONFIG()
  */
-#define _ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG(name) ESP_LCD_TOUCH_IO_I2C_ ## name ## _CONFIG()
-#define ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG(name)  _ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG(name)
-
+#define _ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_NG(name, freq_hz) ESP_LCD_TOUCH_IO_I2C_ ## name ## _CONFIG(freq_hz)
+#define ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_NG(name, freq_hz)  _ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_NG(name, freq_hz)
 /**
  * @brief This macro is used to generate the I2C control panel configuration according to the touch panel name and
  *        address.
@@ -757,11 +756,17 @@ using ESP_PanelTouch [[deprecated("Use `esp_panel::drivers::Touch` instead")]] =
  * Taking GT911 as an example, the following is the actual code after macro expansion:
  *      ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_WITH_ADDR(GT911, 0x14) => ESP_LCD_TOUCH_IO_I2C_GT911_CONFIG_WITH_ADDR(0x14)
  */
-#define _ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_WITH_ADDR(name, addr) \
-    ESP_LCD_TOUCH_IO_I2C_ ## name ## _CONFIG_WITH_ADDR(addr)
-#define ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_WITH_ADDR(name, addr) \
-    _ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_WITH_ADDR(name, addr)
+#define _ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_WITH_ADDR_NG(name, addr, freq_hz) \
+    ESP_LCD_TOUCH_IO_I2C_ ## name ## _CONFIG_WITH_ADDR(addr, freq_hz)
+#define ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_WITH_ADDR_NG(name, addr, freq_hz) \
+    _ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_WITH_ADDR_NG(name, addr, freq_hz)
 
+/**
+ * @brief This macro is deprecated, use `ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_NG()` instead
+ */
+#define ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG(name)  ESP_PANEL_TOUCH_I2C_CONTROL_PANEL_CONFIG_NG(name, 100000)
+
+    
 /**
  * @brief This macro is used to generate the SPI control panel configuration according to the touch panel name.
  *
